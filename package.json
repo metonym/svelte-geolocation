@@ -1,0 +1,52 @@
+{
+  "name": "svelte-geolocation",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Geolocation API wrapper for Svelte",
+  "author": "Eric Liu (https://github.com/metonym)",
+  "svelte": "./src/index.js",
+  "main": "./lib/index.js",
+  "module": "./lib/index.mjs",
+  "types": "./types/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "dev": "rollup -cw",
+    "predeploy": "rollup -c",
+    "deploy": "npx gh-pages -d dist",
+    "prepack": "BUNDLE=true rollup -c",
+    "svelte-check": "svelte-check"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "rollup": "^2.35.1",
+    "rollup-plugin-svelte": "^7.0.0",
+    "svelte": "^3.31.0",
+    "svelte-check": "^1.1.23",
+    "svelte-readme": "^1.3.1",
+    "typescript": "^4.1.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metonym/svelte-geolocation"
+  },
+  "homepage": "https://github.com/metonym/svelte-geolocation",
+  "bugs": "https://github.com/metonym/svelte-geolocation/issues",
+  "keywords": [
+    "svelte",
+    "svelte component",
+    "geolocation",
+    "web api",
+    "coordinates",
+    "latitude",
+    "longitude"
+  ],
+  "files": [
+    "lib",
+    "src",
+    "types"
+  ],
+  "prettier": {
+    "svelteStrictMode": true,
+    "svelteBracketNewLine": true
+  }
+}
