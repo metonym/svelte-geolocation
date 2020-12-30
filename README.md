@@ -1,5 +1,7 @@
 # svelte-geolocation
 
+[![NPM][npm]][npm-url]
+
 > [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API) wrapper for Svelte.
 
 **Features**
@@ -196,3 +198,6 @@ Svelte version 3.31 or greater is required to use this module with TypeScript.
 ## License
 
 [MIT](LICENSE)
+
+[npm]: https://img.shields.io/npm/v/svelte-geolocation.svg?style=for-the-badge&color=%23ff3e00
+[npm-url]: https://npmjs.com/package/svelte-geolocation
