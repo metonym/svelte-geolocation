@@ -9,9 +9,13 @@
 - loading/error/success states
 - access coordinates in a tuple (`[Longtitude, Latitude]`)
 
+<!-- REPO_URL -->
+
+---
+
 <!-- TOC -->
 
-## Quick Start
+## Install
 
 ```bash
 yarn add -D svelte-geolocation
