@@ -79,6 +79,8 @@ Using the default slot, you can destructure the following props:
 
 <button type="button" on:click={() => (getPosition = true)}>Get geolocation</button>
 
+<br />
+
 <Geolocation
   {getPosition}
   let:coords
@@ -93,11 +95,9 @@ Using the default slot, you can destructure the following props:
     {#if loading}
       Loading...
     {/if}
-
     {#if success}
       {JSON.stringify(coords)}
     {/if}
-
     {#if error}
       An error occurred. {error.code} {error.message}
     {/if}
