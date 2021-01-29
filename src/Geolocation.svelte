@@ -28,6 +28,9 @@
   /** Set to `true` to invoke `geolocation.getCurrentPosition` */
   export let getPosition = false;
 
+  /** Set to `true` to enable `geolocation.watchPosition` */
+  export let watch = false;
+
   /** `true` when the position is being fetched */
   export let loading = false;
 
@@ -47,6 +50,8 @@
 
   const dispatch = createEventDispatcher();
 
+  let watcherId = undefined;
+  let lastPosition = undefined;
   function handlePosition(pos) {
     coords = [pos.coords.longitude, pos.coords.latitude];
     position = {
@@ -62,7 +67,10 @@
       timestamp: pos.timestamp,
     };
 
-    dispatch("position", position);
+    if (!lastPosition || (lastPosition.coords.latitude !== pos.coords.latitude || lastPosition.coords.longitude !== pos.coords.longitude)) {
+      lastPosition = pos;
+      dispatch("position", position);
+    }
     loading = false;
   }
 
@@ -79,13 +87,24 @@
 
     if (!("geolocation" in navigator)) {
       notSupported = true;
+    } else if (watch) {
+      watcherId = watcherId ? watcherId : navigator.geolocation.watchPosition(handlePosition, handleError, opts);
     } else {
       navigator.geolocation.getCurrentPosition(handlePosition, handleError, opts);
     }
   }
 
+  async function clearWatcher(watcherId) {
+    if (!("geolocation" in navigator)) {
+      notSupported = true;
+    } else {
+      navigator.geolocation.clearWatch(watcherId);
+    }
+  }
+
   $: if (getPosition) getGeolocationPosition(options);
   $: success = getPosition && !loading && !error;
+  $: if (!watch && watcherId) clearWatcher(watcherId);
 </script>
 
 <slot loading="{loading}" success="{success}" error="{error}" notSupported="{notSupported}" coords="{coords}" />
