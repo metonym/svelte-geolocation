@@ -37,7 +37,7 @@
   /** `true` if the browser does not support the Geolocation API */
   export let notSupported = false;
 
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onDestroy } from 'svelte'
 
   const dispatch = createEventDispatcher();
 
@@ -79,7 +79,8 @@
     if (!("geolocation" in navigator)) {
       notSupported = true;
     } else {
-      return watcherId ? watcherId : navigator.geolocation.watchPosition(handlePosition, handleError, opts);
+      watcherId = watcherId ? watcherId : navigator.geolocation.watchPosition(handlePosition, handleError, opts);
+      return watcherId;
     }
   }
 
@@ -102,6 +103,10 @@
       navigator.geolocation.clearWatch(watcherId);
     }
   }
+
+  onDestroy(() => {
+    if (watcherId) clearWatcher(watcherId)
+  });
 
   $: success = !loading && !error;
 </script>
