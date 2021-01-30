@@ -22,15 +22,6 @@
   /** @type {Partial<GeolocationPosition>} */
   export let position = {};
 
-  /** @type {PositionOptions} */
-  export let options = {};
-
-  /** Set to `true` to invoke `geolocation.getCurrentPosition` */
-  export let getPosition = false;
-
-  /** Set to `true` to enable `geolocation.watchPosition` */
-  export let watch = false;
-
   /** `true` when the position is being fetched */
   export let loading = false;
 
@@ -80,21 +71,31 @@
     loading = false;
   }
 
-  async function getGeolocationPosition(opts) {
+  export async function watchPosition(opts) {
     notSupported = false;
     loading = true;
     error = false;
 
     if (!("geolocation" in navigator)) {
       notSupported = true;
-    } else if (watch) {
-      watcherId = watcherId ? watcherId : navigator.geolocation.watchPosition(handlePosition, handleError, opts);
+    } else {
+      return watcherId ? watcherId : navigator.geolocation.watchPosition(handlePosition, handleError, opts);
+    }
+  }
+
+  export async function getPosition(opts) {
+    notSupported = false;
+    loading = true;
+    error = false;
+
+    if (!("geolocation" in navigator)) {
+      notSupported = true;
     } else {
       navigator.geolocation.getCurrentPosition(handlePosition, handleError, opts);
     }
   }
 
-  async function clearWatcher(watcherId) {
+  export async function clearWatcher(watcherId) {
     if (!("geolocation" in navigator)) {
       notSupported = true;
     } else {
@@ -102,9 +103,7 @@
     }
   }
 
-  $: if (getPosition) getGeolocationPosition(options);
-  $: success = getPosition && !loading && !error;
-  $: if (!watch && watcherId) clearWatcher(watcherId);
+  $: success = !loading && !error;
 </script>
 
 <slot loading="{loading}" success="{success}" error="{error}" notSupported="{notSupported}" coords="{coords}" />
