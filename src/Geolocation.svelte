@@ -46,12 +46,13 @@
   /** `true` if the browser does not support the Geolocation API */
   export let notSupported = false;
 
-  import { createEventDispatcher, onDestroy } from 'svelte'
+  import { createEventDispatcher, onDestroy } from "svelte";
 
   const dispatch = createEventDispatcher();
 
   let watcherId = undefined;
   let lastPosition = undefined;
+
   function handlePosition(pos) {
     coords = [pos.coords.longitude, pos.coords.latitude];
     position = {
