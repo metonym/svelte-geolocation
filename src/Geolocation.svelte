@@ -22,6 +22,15 @@
   /** @type {Partial<GeolocationPosition>} */
   export let position = {};
 
+  /** @type {PositionOptions} */
+  export let options = {};
+
+  /** Set to `true` to enable `geolocation` API. If `watch` is false, then `geolocation.getCurrentLocation` is used. */
+  export let getPosition = false;
+
+  /** Set to `true` to enable `geolocation.watchPosition` */
+  export let watch = false;
+
   /** `true` when the position is being fetched */
   export let loading = false;
 
@@ -84,7 +93,7 @@
     }
   }
 
-  export async function getPosition(opts) {
+  export async function getGeolocationPosition(opts) {
     notSupported = false;
     loading = true;
     error = false;
@@ -108,7 +117,10 @@
     if (watcherId) clearWatcher(watcherId)
   });
 
-  $: success = !loading && !error;
+  $: if (getPosition && watch) watchPosition(options);
+  $: if (getPosition && !watch) getGeolocationPosition(options);
+  $: success = getPosition && !loading && !error;
+  $: if ((!getPosition || !watch) && watcherId) clearWatcher(watcherId);
 </script>
 
 <slot loading="{loading}" success="{success}" error="{error}" notSupported="{notSupported}" coords="{coords}" />
