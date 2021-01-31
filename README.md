@@ -59,6 +59,33 @@ Bind to `position` to access all properties from [GeolocationPosition](https://d
 ```
 <!-- prettier-ignore-end -->
 
+### Watching Position
+
+Set `watch` to `true` to invoke the `geolocation.watchPosition` method and get informed if the user changes position.
+
+<!-- prettier-ignore-start -->
+```svelte
+<script>
+  let getPosition = false;
+  let positions = [];
+  
+  const handlePosition = (position) => {
+    if (!position) {
+      return
+    }
+
+    positions.push(position);
+    positions = positions;
+  }
+</script>
+
+<button type="button" on:click={() => (getPosition = !getPosition)}>Get Position</button>
+<Geolocation getPosition watch={true} on:position={(event) => handlePosition(event.detail.coords)} />
+
+<pre>{JSON.stringify(positions, null, 2)}</pre>
+```
+<!-- prettier-ignore-end -->
+
 ### Controlled trigger + default slot
 
 This example shows the controlled invocation of `geolocation.getCurrentPosition`.
@@ -186,6 +213,7 @@ Specify [Geolocation position options](https://developer.mozilla.org/en-US/docs/
 | position     | [GeolocationPosition](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition)                                        |
 | options      | [PositionOptions](https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions)                                                |
 | getPosition  | `boolean` (default: `false`)                                                                                                       |
+| watch        | `boolean` (default: `false`)                                                                                                       |
 | loading      | `boolean` (default: `false`)                                                                                                       |
 | success      | `boolean` (default: `false`)                                                                                                       |
 | error        | `false` or [GeolocationPositionError](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError) (default:`false`) |
