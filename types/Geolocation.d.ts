@@ -23,10 +23,16 @@ export interface GeolocationProps {
   options?: PositionOptions;
 
   /**
-   * Set to `true` to invoke `geolocation.getCurrentPosition`
+   * Set to `true` to enable `geolocation` API. If `watch`
+   * is false, then `geolocation.getCurrentLocation` is used.
    * @default false
    */
   getPosition?: boolean;
+
+  /** Set to `true` to enable `geolocation.watchPosition`
+   * @default false
+   */
+  watch?: boolean;
 
   /**
    * `true` when the position is being fetched
