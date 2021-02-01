@@ -50,7 +50,9 @@
 
   const dispatch = createEventDispatcher();
 
+  /** @type {Number | undefined} */
   let watcherId = undefined;
+  /** @type {GeolocationPosition | undefined} */
   let lastPosition = undefined;
 
   function handlePosition(pos) {
