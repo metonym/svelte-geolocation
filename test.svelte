@@ -2,6 +2,7 @@
   import Geolocation from "./types";
   import { GeolocationCoords } from "./types/Geolocation";
 
+  let ref: Geolocation;
   let getPosition = false;
   let position = {};
   let coords: GeolocationCoords = [-1, -1];
@@ -11,11 +12,21 @@
     timeout: 5000, // milliseconds
     maximumAge: 60 * 60 * 1000, // milliseconds
   };
+
+  $: if (ref) ref.getGeolocationPosition();
+  $: if (ref) ref.watchPosition();
 </script>
 
 <Geolocation getPosition="{getPosition}" bind:position />
 
-<Geolocation getPosition="{getPosition}" bind:coords let:loading let:success let:error let:notSupported>
+<Geolocation
+  getPosition="{getPosition}"
+  bind:coords
+  let:loading
+  let:success
+  let:error
+  let:notSupported
+>
   {#if notSupported}
     Your browser does not support the Geolocation API.
   {:else}
@@ -33,7 +44,9 @@
 >Get geolocation</button>
 
 <Geolocation
+  bind:this="{ref}"
   getPosition
+  watch="{false}"
   on:position="{(e) => {
     console.log(e.detail); // GeolocationPosition
   }}"

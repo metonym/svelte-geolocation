@@ -106,6 +106,26 @@ Using the default slot, you can destructure the following props:
 ```
 <!-- prettier-ignore-end -->
 
+### Watching Position
+
+Set `watch` to `true` to invoke the `geolocation.watchPosition` method and get informed if the user changes position.
+
+<!-- prettier-ignore-start -->
+```svelte
+<script>
+  let getPositionAgain = false;
+  let detail = {};
+</script>
+
+<button type="button" on:click={() => (getPositionAgain = !getPositionAgain)}>Get Position</button>
+<Geolocation getPosition={getPositionAgain} watch={true} on:position={(e) => {
+  detail = e.detail
+  }} />
+
+<pre>{JSON.stringify(detail, null, 2)}</pre>
+```
+<!-- prettier-ignore-end -->
+
 ### Dispatched Events
 
 You can listen to dispatched events as an alternative to binding.
@@ -186,6 +206,7 @@ Specify [Geolocation position options](https://developer.mozilla.org/en-US/docs/
 | position     | [GeolocationPosition](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition)                                        |
 | options      | [PositionOptions](https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions)                                                |
 | getPosition  | `boolean` (default: `false`)                                                                                                       |
+| watch        | `boolean` (default: `false`)                                                                                                       |
 | loading      | `boolean` (default: `false`)                                                                                                       |
 | success      | `boolean` (default: `false`)                                                                                                       |
 | error        | `false` or [GeolocationPositionError](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError) (default:`false`) |
