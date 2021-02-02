@@ -19,7 +19,14 @@
 
 <Geolocation getPosition="{getPosition}" bind:position />
 
-<Geolocation getPosition="{getPosition}" bind:coords let:loading let:success let:error let:notSupported>
+<Geolocation
+  getPosition="{getPosition}"
+  bind:coords
+  let:loading
+  let:success
+  let:error
+  let:notSupported
+>
   {#if notSupported}
     Your browser does not support the Geolocation API.
   {:else}
@@ -37,9 +44,9 @@
 >Get geolocation</button>
 
 <Geolocation
-  bind:this={ref}
+  bind:this="{ref}"
   getPosition
-  watch={false}
+  watch="{false}"
   on:position="{(e) => {
     console.log(e.detail); // GeolocationPosition
   }}"

@@ -70,7 +70,11 @@
       timestamp: pos.timestamp,
     };
 
-    if (!lastPosition || (lastPosition.coords.latitude !== pos.coords.latitude || lastPosition.coords.longitude !== pos.coords.longitude)) {
+    if (
+      !lastPosition ||
+      lastPosition.coords.latitude !== pos.coords.latitude ||
+      lastPosition.coords.longitude !== pos.coords.longitude
+    ) {
       lastPosition = pos;
       dispatch("position", position);
     }
@@ -91,7 +95,13 @@
     if (!("geolocation" in navigator)) {
       notSupported = true;
     } else {
-      watcherId = watcherId ? watcherId : navigator.geolocation.watchPosition(handlePosition, handleError, opts);
+      watcherId = watcherId
+        ? watcherId
+        : navigator.geolocation.watchPosition(
+            handlePosition,
+            handleError,
+            opts
+          );
       return watcherId;
     }
   }
@@ -104,7 +114,11 @@
     if (!("geolocation" in navigator)) {
       notSupported = true;
     } else {
-      navigator.geolocation.getCurrentPosition(handlePosition, handleError, opts);
+      navigator.geolocation.getCurrentPosition(
+        handlePosition,
+        handleError,
+        opts
+      );
     }
   }
 
@@ -117,7 +131,7 @@
   }
 
   onDestroy(() => {
-    if (watcherId) clearWatcher(watcherId)
+    if (watcherId) clearWatcher(watcherId);
   });
 
   $: if (getPosition && watch) watchPosition(options);
@@ -126,4 +140,10 @@
   $: if ((!getPosition || !watch) && watcherId) clearWatcher(watcherId);
 </script>
 
-<slot loading="{loading}" success="{success}" error="{error}" notSupported="{notSupported}" coords="{coords}" />
+<slot
+  loading="{loading}"
+  success="{success}"
+  error="{error}"
+  notSupported="{notSupported}"
+  coords="{coords}"
+/>
