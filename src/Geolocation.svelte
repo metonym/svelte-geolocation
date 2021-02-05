@@ -95,13 +95,10 @@
     if (!("geolocation" in navigator)) {
       notSupported = true;
     } else {
-      watcherId = watcherId
-        ? watcherId
-        : navigator.geolocation.watchPosition(
-            handlePosition,
-            handleError,
-            opts
-          );
+      if (watcherId) {
+        await clearWatcher(watcherId);
+      }
+      watcherId = navigator.geolocation.watchPosition(handlePosition, handleError, opts);
       return watcherId;
     }
   }
@@ -127,6 +124,7 @@
       notSupported = true;
     } else {
       navigator.geolocation.clearWatch(watcherId);
+      watcherId = undefined;
     }
   }
 
