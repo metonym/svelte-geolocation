@@ -98,7 +98,11 @@
       if (watcherId) {
         await clearWatcher(watcherId);
       }
-      watcherId = navigator.geolocation.watchPosition(handlePosition, handleError, opts);
+      watcherId = navigator.geolocation.watchPosition(
+        handlePosition,
+        handleError,
+        opts
+      );
       return watcherId;
     }
   }
