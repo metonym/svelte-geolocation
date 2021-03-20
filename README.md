@@ -4,12 +4,12 @@
 
 > [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API) wrapper for Svelte.
 
+<!-- REPO_URL -->
+
 **Features**
 
 - loading/error/success states
 - access coordinates in a tuple (`[Longtitude, Latitude]`)
-
-<!-- REPO_URL -->
 
 ---
 
@@ -29,25 +29,23 @@ npm i -D svelte-geolocation
 
 Set `getPosition` to `true` to invoke the `geolocation.getCurrentPosition` method and bind to the `coords` prop to retrieve the `[lng, lat]` of the device. The default `coords` value is `[-1, -1]`.
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   import Geolocation from "svelte-geolocation";
 
-  let coords;
+  let coords = [];
 </script>
 
 <Geolocation getPosition bind:coords />
 
 <pre>{JSON.stringify(coords)}</pre>
+
 ```
-<!-- prettier-ignore-end -->
 
 ### Binding geolocation position
 
 Bind to `position` to access all properties from [GeolocationPosition](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition).
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   let position;
@@ -56,8 +54,8 @@ Bind to `position` to access all properties from [GeolocationPosition](https://d
 <Geolocation getPosition bind:position />
 
 <pre>{JSON.stringify(position, null, 2)}</pre>
+
 ```
-<!-- prettier-ignore-end -->
 
 ### Controlled trigger + default slot
 
@@ -71,18 +69,15 @@ Using the default slot, you can destructure the following props:
 - **`error`**: `true` if an error occurs when fetching the geolocation
 - **`notSupported`**: `true` if the device does not support the Geolocation API
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   let getPosition = false;
 </script>
 
-<button type="button" on:click={() => (getPosition = true)}>Get geolocation</button>
-
-<br />
+<button on:click="{() => (getPosition = true)}"> Get geolocation </button>
 
 <Geolocation
-  {getPosition}
+  getPosition="{getPosition}"
   let:coords
   let:loading
   let:success
@@ -103,28 +98,34 @@ Using the default slot, you can destructure the following props:
     {/if}
   {/if}
 </Geolocation>
+
 ```
-<!-- prettier-ignore-end -->
 
 ### Watching Position
 
 Set `watch` to `true` to invoke the `geolocation.watchPosition` method and get informed if the user changes position.
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   let getPositionAgain = false;
   let detail = {};
 </script>
 
-<button type="button" on:click={() => (getPositionAgain = !getPositionAgain)}>Get Position</button>
-<Geolocation getPosition={getPositionAgain} watch={true} on:position={(e) => {
-  detail = e.detail
-  }} />
+<button on:click="{() => (getPositionAgain = !getPositionAgain)}">
+  Get Position
+</button>
+
+<Geolocation
+  getPosition="{getPositionAgain}"
+  watch="{true}"
+  on:position="{(e) => {
+    detail = e.detail;
+  }}"
+/>
 
 <pre>{JSON.stringify(detail, null, 2)}</pre>
+
 ```
-<!-- prettier-ignore-end -->
 
 ### Dispatched Events
 
@@ -133,7 +134,6 @@ You can listen to dispatched events as an alternative to binding.
 - **`on:position`**: fired when `geolocation.getCurrentPosition` succeeds
 - **`on:error`**: fired when `geolocation.getCurrentPosition` fails
 
-<!-- prettier-ignore-start -->
 ```svelte
 <script>
   let events = [];
@@ -162,13 +162,11 @@ You can listen to dispatched events as an alternative to binding.
 </ul>
 
 ```
-<!-- prettier-ignore-end -->
 
 ### Geolocation options
 
 Specify [Geolocation position options](https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions) using the `options` prop.
 
-<!-- prettier-ignore-start -->
 ```html
 <script>
   let options = {
@@ -194,7 +192,6 @@ Specify [Geolocation position options](https://developer.mozilla.org/en-US/docs/
 
 <Geolocation getPosition {options} />
 ```
-<!-- prettier-ignore-end -->
 
 ## API
 
