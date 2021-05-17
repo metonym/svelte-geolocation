@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Geolocation from "./types";
-  import { GeolocationCoords } from "./types/Geolocation";
+  import Geolocation from "../types";
+  import { GeolocationCoords } from "../types/Geolocation";
 
   let ref: Geolocation;
   let getPosition = false;
@@ -40,8 +40,8 @@
   type="button"
   on:click="{() => {
     getPosition = true;
-  }}"
->Get geolocation</button>
+  }}">Get geolocation</button
+>
 
 <Geolocation
   bind:this="{ref}"
