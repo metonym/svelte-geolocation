@@ -1,7 +1,7 @@
 <script>
   /**
    * @typedef {false | GeolocationPositionError} GeolocationError
-   * @typedef {[number, number]} GeolocationCoords
+   * @typedef {[longitude: number, latitude: number]} GeolocationCoords
    * @event {GeolocationPosition} position
    * @event {GeolocationError} error
    * @slot {{
@@ -14,7 +14,7 @@
    */
 
   /**
-   * [Longitude, Latitude]
+   * Obtain the geolocation coordinates ([longitude, latitude])
    * @type {GeolocationCoords}
    */
   export let coords = [-1, -1];
@@ -25,7 +25,10 @@
   /** @type {PositionOptions} */
   export let options = {};
 
-  /** Set to `true` to enable `geolocation` API. If `watch` is false, then `geolocation.getCurrentLocation` is used. */
+  /**
+   * Set to `true` to enable `geolocation` API.
+   * If `watch` is false, then `geolocation.getCurrentLocation` is used.
+   */
   export let getPosition = false;
 
   /** Set to `true` to enable `geolocation.watchPosition` */
@@ -46,15 +49,74 @@
   /** `true` if the browser does not support the Geolocation API */
   export let notSupported = false;
 
+  /**
+   * Watch the geolocation position
+   * @type {(options: PositionOptions) => Promise<Number | undefined>}
+   */
+  export async function watchPosition(opts) {
+    notSupported = false;
+    loading = true;
+    error = false;
+
+    if (!("geolocation" in navigator)) {
+      notSupported = true;
+    } else {
+      if (watcherId) await clearWatcher(watcherId);
+
+      watcherId = navigator.geolocation.watchPosition(
+        handlePosition,
+        handleError,
+        opts
+      );
+
+      return watcherId;
+    }
+  }
+
+  /**
+   * Invoke the `geolocation.getCurrentPosition` method
+   * @type {(options: PositionOptions) => Promise<void>}
+   */
+  export async function getGeolocationPosition(opts) {
+    notSupported = false;
+    loading = true;
+    error = false;
+
+    if (!("geolocation" in navigator)) {
+      notSupported = true;
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        handlePosition,
+        handleError,
+        opts
+      );
+    }
+  }
+
+  /**
+   * Clear the Geolocation watcher
+   * @type {(watcherId: number) => Promise<void>}
+   */
+  export async function clearWatcher(watcherId) {
+    if (!("geolocation" in navigator)) {
+      notSupported = true;
+    } else {
+      navigator.geolocation.clearWatch(watcherId);
+      watcherId = undefined;
+    }
+  }
+
   import { createEventDispatcher, onDestroy } from "svelte";
 
   const dispatch = createEventDispatcher();
 
-  /** @type {Number | undefined} */
+  /** @type {number | undefined} */
   let watcherId = undefined;
+
   /** @type {GeolocationPosition | undefined} */
   let lastPosition = undefined;
 
+  /** @type {(position: GeolocationPosition) => void} */
   function handlePosition(pos) {
     coords = [pos.coords.longitude, pos.coords.latitude];
     position = {
@@ -81,55 +143,11 @@
     loading = false;
   }
 
+  /** @type {(error: GeolocationError) => void;} */
   function handleError(err) {
     dispatch("error", err);
     error = err;
     loading = false;
-  }
-
-  export async function watchPosition(opts) {
-    notSupported = false;
-    loading = true;
-    error = false;
-
-    if (!("geolocation" in navigator)) {
-      notSupported = true;
-    } else {
-      if (watcherId) {
-        await clearWatcher(watcherId);
-      }
-      watcherId = navigator.geolocation.watchPosition(
-        handlePosition,
-        handleError,
-        opts
-      );
-      return watcherId;
-    }
-  }
-
-  export async function getGeolocationPosition(opts) {
-    notSupported = false;
-    loading = true;
-    error = false;
-
-    if (!("geolocation" in navigator)) {
-      notSupported = true;
-    } else {
-      navigator.geolocation.getCurrentPosition(
-        handlePosition,
-        handleError,
-        opts
-      );
-    }
-  }
-
-  export async function clearWatcher(watcherId) {
-    if (!("geolocation" in navigator)) {
-      notSupported = true;
-    } else {
-      navigator.geolocation.clearWatch(watcherId);
-      watcherId = undefined;
-    }
   }
 
   onDestroy(() => {

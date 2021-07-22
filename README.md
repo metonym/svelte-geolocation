@@ -9,17 +9,23 @@
 **Features**
 
 - loading/error/success states
-- access coordinates in a tuple (`[Longtitude, Latitude]`)
+- access coordinates in a 2-tuple (`[longtitude: number, latitude: number]`)
 
 ---
 
 <!-- TOC -->
 
-## Install
+## Installation
+
+**Yarn**
 
 ```bash
 yarn add -D svelte-geolocation
-# OR
+```
+
+**NPM**
+
+```bash
 npm i -D svelte-geolocation
 ```
 
@@ -27,7 +33,7 @@ npm i -D svelte-geolocation
 
 ### Binding coordinates
 
-Set `getPosition` to `true` to invoke the `geolocation.getCurrentPosition` method and bind to the `coords` prop to retrieve the `[lng, lat]` of the device. The default `coords` value is `[-1, -1]`.
+Set `getPosition` to `true` to invoke the `geolocation.getCurrentPosition` method and bind to the `coords` prop to retrieve the `[longitude, latitude]` of the device. The default `coords` value is `[-1, -1]`.
 
 ```svelte
 <script>
@@ -199,7 +205,7 @@ Specify [Geolocation position options](https://developer.mozilla.org/en-US/docs/
 
 | Prop name    | Value                                                                                                                              |
 | :----------- | :--------------------------------------------------------------------------------------------------------------------------------- |
-| coords       | `[Longitude, Latitude]` (default: `[-1, -1]`)                                                                                      |
+| coords       | `[longitude: number, latitude: number];` (default: `[-1, -1]`)                                                                     |
 | position     | [GeolocationPosition](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition)                                        |
 | options      | [PositionOptions](https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions)                                                |
 | getPosition  | `boolean` (default: `false`)                                                                                                       |
@@ -209,9 +215,41 @@ Specify [Geolocation position options](https://developer.mozilla.org/en-US/docs/
 | error        | `false` or [GeolocationPositionError](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError) (default:`false`) |
 | notSupported | `boolean` (default: `false`)                                                                                                       |
 
+### Accessors
+
+Use the `bind:this` directive to access the accessor methods available on the component instance.
+
+```svelte
+<script>
+  let geolocation;
+
+  $: if (geolocation) {
+    geolocation.getGeolocationPosition({ enableHighAccuracy: true });
+  }
+</script>
+
+<Geolocation bind:this="{geolocation}" />
+
+```
+
+```ts
+interface Accessors {
+  /** Watch the geolocation position */
+  watchPosition: (options: PositionOptions) => Promise<Number | undefined>;
+
+  /** Invoke the geolocation.getCurrentPosition method */
+  getGeolocationPosition: (options: PositionOptions) => Promise<void>;
+
+  /** Clear the Geolocation watcher */
+  clearWatcher: (watcherId: number) => Promise<void>;
+}
+```
+
 ## TypeScript
 
 Svelte version 3.31 or greater is required to use this module with TypeScript.
+
+TypeScript definitions are located in the [types folder](./types).
 
 ## Changelog
 
