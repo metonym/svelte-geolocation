@@ -13,8 +13,8 @@
     maximumAge: 60 * 60 * 1000, // milliseconds
   };
 
-  $: if (ref) ref.getGeolocationPosition();
-  $: if (ref) ref.watchPosition();
+  $: if (ref) ref.getGeolocationPosition({});
+  $: if (ref) ref.watchPosition({});
 </script>
 
 <Geolocation getPosition="{getPosition}" bind:position />
