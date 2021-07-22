@@ -1,7 +1,10 @@
 <script lang="ts">
   import Geolocation from "../types";
-  import { GeolocationCoords } from "../types/Geolocation";
+  import { GeolocationProps, GeolocationCoords } from "../types/Geolocation";
 
+  let props: GeolocationProps = {
+    watch: true,
+  };
   let ref: Geolocation;
   let getPosition = false;
   let position = {};
@@ -17,9 +20,12 @@
   $: if (ref) ref.watchPosition({});
 </script>
 
+<!-- svelte-ignore missing-declaration -->
 <Geolocation getPosition="{getPosition}" bind:position />
 
+<!-- svelte-ignore missing-declaration -->
 <Geolocation
+  {...props}
   getPosition="{getPosition}"
   bind:coords
   let:loading
@@ -43,6 +49,7 @@
   }}">Get geolocation</button
 >
 
+<!-- svelte-ignore missing-declaration -->
 <Geolocation
   bind:this="{ref}"
   getPosition
@@ -55,4 +62,5 @@
   }}"
 />
 
+<!-- svelte-ignore missing-declaration -->
 <Geolocation getPosition options="{options}" />
