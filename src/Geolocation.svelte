@@ -154,8 +154,10 @@
     if (watcherId) clearWatcher(watcherId);
   });
 
-  $: if (getPosition && watch) watchPosition(options);
-  $: if (getPosition && !watch) getGeolocationPosition(options);
+  $: if (typeof window !== "undefined" && getPosition && watch)
+    watchPosition(options);
+  $: if (typeof window !== "undefined" && getPosition && !watch)
+    getGeolocationPosition(options);
   $: success = getPosition && !loading && !error;
   $: if ((!getPosition || !watch) && watcherId) clearWatcher(watcherId);
 </script>
