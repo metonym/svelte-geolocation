@@ -1,6 +1,10 @@
 <script lang="ts">
   import Geolocation from "../types";
-  import { GeolocationProps, GeolocationCoords } from "../types/Geolocation";
+  import {
+    GeolocationProps,
+    GeolocationCoords,
+  } from "../types/Geolocation.svelte";
+  import Geolocation2 from "../types/Geolocation.svelte";
 
   let props: GeolocationProps = {
     watch: true,
@@ -64,3 +68,6 @@
 
 <!-- svelte-ignore missing-declaration -->
 <Geolocation getPosition options="{options}" />
+
+<!-- svelte-ignore missing-declaration -->
+<Geolocation2 />
