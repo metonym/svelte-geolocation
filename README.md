@@ -45,7 +45,6 @@ Set `getPosition` to `true` to invoke the `geolocation.getCurrentPosition` metho
 <Geolocation getPosition bind:coords />
 
 <pre>{JSON.stringify(coords)}</pre>
-
 ```
 
 ### Binding geolocation position
@@ -54,13 +53,14 @@ Bind to `position` to access all properties from [GeolocationPosition](https://d
 
 ```svelte
 <script>
+  import Geolocation from "svelte-geolocation";
+
   let position;
 </script>
 
 <Geolocation getPosition bind:position />
 
 <pre>{JSON.stringify(position, null, 2)}</pre>
-
 ```
 
 ### Controlled trigger + default slot
@@ -77,6 +77,8 @@ Using the default slot, you can destructure the following props:
 
 ```svelte
 <script>
+  import Geolocation from "svelte-geolocation";
+
   let getPosition = false;
 </script>
 
@@ -104,7 +106,6 @@ Using the default slot, you can destructure the following props:
     {/if}
   {/if}
 </Geolocation>
-
 ```
 
 ### Watching Position
@@ -113,6 +114,8 @@ Set `watch` to `true` to invoke the `geolocation.watchPosition` method and get i
 
 ```svelte
 <script>
+  import Geolocation from "svelte-geolocation";
+
   let getPositionAgain = false;
   let detail = {};
 </script>
@@ -130,7 +133,6 @@ Set `watch` to `true` to invoke the `geolocation.watchPosition` method and get i
 />
 
 <pre>{JSON.stringify(detail, null, 2)}</pre>
-
 ```
 
 ### Dispatched Events
@@ -142,6 +144,8 @@ You can listen to dispatched events as an alternative to binding.
 
 ```svelte
 <script>
+  import Geolocation from "svelte-geolocation";
+
   let events = [];
 </script>
 
@@ -159,22 +163,19 @@ You can listen to dispatched events as an alternative to binding.
 
 <strong>Dispatched events:</strong>
 
-<ul>
-  {#each events as event}
-    <li>
-      <pre>{JSON.stringify(event, null, 2)}</pre>
-    </li>
-  {/each}
-</ul>
-
+{#each events as event}
+  <pre>{JSON.stringify(event, null, 2)}</pre>
+{/each}
 ```
 
 ### Geolocation options
 
 Specify [Geolocation position options](https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions) using the `options` prop.
 
-```html
+```svelte no-eval
 <script>
+  import Geolocation from "svelte-geolocation";
+
   let options = {
     /**
      * @type {boolean}
@@ -196,7 +197,7 @@ Specify [Geolocation position options](https://developer.mozilla.org/en-US/docs/
   };
 </script>
 
-<Geolocation getPosition {options} />
+<Geolocation getPosition options="{options}" />
 ```
 
 ## API
@@ -219,18 +220,19 @@ Specify [Geolocation position options](https://developer.mozilla.org/en-US/docs/
 
 Use the `bind:this` directive to access the accessor methods available on the component instance.
 
-```svelte
+```svelte no-display
 <script>
+  import Geolocation from "svelte-geolocation";
+
   let geolocation;
 
-  $: if (geolocation) {
-    geolocation.getGeolocationPosition({ enableHighAccuracy: true });
-  }
+  $: geolocation?.getGeolocationPosition({ enableHighAccuracy: true });
 </script>
 
 <Geolocation bind:this="{geolocation}" />
-
 ```
+
+#### API
 
 ```ts
 interface Accessors {
