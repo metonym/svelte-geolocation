@@ -1,16 +1,8 @@
 <script>
+  // @ts-check
   /**
    * @typedef {false | GeolocationPositionError} GeolocationError
    * @typedef {[longitude: number, latitude: number]} GeolocationCoords
-   * @event {GeolocationPosition} position
-   * @event {GeolocationError} error
-   * @slot {{
-   *  loading: boolean;
-   *  success: boolean;
-   *  error: GeolocationError;
-   *  notSupported: boolean;
-   *  coords: GeolocationCoords
-   * }}
    */
 
   /**
@@ -26,8 +18,8 @@
   export let options = {};
 
   /**
-   * Set to `true` to enable `geolocation` API.
-   * If `watch` is false, then `geolocation.getCurrentLocation` is used.
+   * Set to `true` to automatically trigger the `geolocation` API.
+   * If `watch` is false, then the `geolocation.getCurrentLocation` accessor must be called.
    */
   export let getPosition = false;
 
@@ -50,10 +42,10 @@
   export let notSupported = false;
 
   /**
-   * Watch the geolocation position
-   * @type {(options: PositionOptions) => Promise<Number | undefined>}
+   * Watch the geolocation position.
+   * @type {(options: PositionOptions) => undefined | number}
    */
-  export async function watchPosition(opts) {
+  export function watchPosition(opts) {
     notSupported = false;
     loading = true;
     error = false;
@@ -61,12 +53,12 @@
     if (!("geolocation" in navigator)) {
       notSupported = true;
     } else {
-      if (watcherId) await clearWatcher(watcherId);
+      if (watcherId) clearWatcher(watcherId);
 
       watcherId = navigator.geolocation.watchPosition(
         handlePosition,
         handleError,
-        opts
+        opts,
       );
 
       return watcherId;
@@ -74,7 +66,7 @@
   }
 
   /**
-   * Invoke the `geolocation.getCurrentPosition` method
+   * Programmatically get the geolocation position.
    * @type {(options: PositionOptions) => Promise<void>}
    */
   export async function getGeolocationPosition(opts) {
@@ -88,26 +80,29 @@
       navigator.geolocation.getCurrentPosition(
         handlePosition,
         handleError,
-        opts
+        opts,
       );
     }
   }
 
   /**
    * Clear the Geolocation watcher
-   * @type {(watcherId: number) => Promise<void>}
+   * @type {(watcherId: number) => void}
    */
-  export async function clearWatcher(watcherId) {
+  export function clearWatcher(id) {
     if (!("geolocation" in navigator)) {
       notSupported = true;
     } else {
-      navigator.geolocation.clearWatch(watcherId);
+      navigator.geolocation.clearWatch(id);
       watcherId = undefined;
     }
   }
 
-  import { createEventDispatcher, onDestroy } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
+  /**
+   * @type {import("svelte").EventDispatcher<{ position: Partial<GeolocationPosition>; error: GeolocationError; }>}
+   */
   const dispatch = createEventDispatcher();
 
   /** @type {number | undefined} */
@@ -143,29 +138,28 @@
     loading = false;
   }
 
-  /** @type {(error: GeolocationError) => void;} */
-  function handleError(err) {
-    dispatch("error", err);
-    error = err;
+  /** @type {(error: GeolocationError) => void} */
+  function handleError(geolocationError) {
+    dispatch("error", geolocationError);
+    error = geolocationError;
     loading = false;
   }
 
-  onDestroy(() => {
-    if (watcherId) clearWatcher(watcherId);
+  onMount(() => {
+    return () => {
+      if (watcherId) clearWatcher(watcherId);
+    };
   });
 
-  $: if (typeof window !== "undefined" && getPosition && watch)
+  $: if (typeof window !== "undefined" && getPosition && watch) {
     watchPosition(options);
-  $: if (typeof window !== "undefined" && getPosition && !watch)
+  }
+  $: if (typeof window !== "undefined" && getPosition && !watch) {
     getGeolocationPosition(options);
+  }
+
   $: success = getPosition && !loading && !error;
   $: if ((!getPosition || !watch) && watcherId) clearWatcher(watcherId);
 </script>
 
-<slot
-  loading="{loading}"
-  success="{success}"
-  error="{error}"
-  notSupported="{notSupported}"
-  coords="{coords}"
-/>
+<slot {loading} {success} {error} {notSupported} {coords} />
