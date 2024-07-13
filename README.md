@@ -2,14 +2,18 @@
 
 [![NPM][npm]][npm-url]
 
-> [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API) wrapper for Svelte.
+> Svelte bindings for the [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
 
 <!-- REPO_URL -->
 
+Declaratively access the Geolocation API in Svelte components. This package provides a simple way to fetch the geolocation coordinates of the device.
+
 **Features**
 
-- loading/error/success states
-- access coordinates in a 2-tuple (`[longtitude: number, latitude: number]`)
+- Bind to coordinates in a 2-tuple (`[longtitude: number, latitude: number]`).
+- Slotted states: loading/error/success.
+- Programmatic access to the Geolocation API (e.g., `geolocation.getCurrentPosition`).
+- Watch the current position.
 
 ---
 
@@ -17,23 +21,25 @@
 
 ## Installation
 
-**Yarn**
-
 ```bash
-yarn add -D svelte-geolocation
-```
-
-**NPM**
-
-```bash
+# npm
 npm i -D svelte-geolocation
+
+# pnpm
+pnpm i -D svelte-geolocation
+
+# Bun
+bun i -D svelte-geolocation
+
+# Yarn
+yarn add -D svelte-geolocation
 ```
 
 ## Usage
 
 ### Binding coordinates
 
-Set `getPosition` to `true` to invoke the `geolocation.getCurrentPosition` method and bind to the `coords` prop to retrieve the `[longitude, latitude]` of the device. The default `coords` value is `[-1, -1]`.
+Set `getPosition` to `true` to automatically invoke the `geolocation.getCurrentPosition` method and bind to the `coords` prop to retrieve the `[longitude, latitude]` of the device. The default `coords` value is `[-1, -1]`.
 
 ```svelte
 <script>
@@ -63,9 +69,24 @@ Bind to `position` to access all properties from [GeolocationPosition](https://d
 <pre>{JSON.stringify(position, null, 2)}</pre>
 ```
 
-### Controlled trigger + default slot
+### Programmatic usage
 
-This example shows the controlled invocation of `geolocation.getCurrentPosition`.
+By default, the component will not automatically fetch the geolocation coordinates. This method must be programmatically triggered.
+
+```svelte no-eval
+<script>
+  let ref;
+
+  // Access the component instance and programmatically invoke the method.
+  $: ref?.getGeolocationPosition({ enableHighAccuracy: true });
+</script>
+
+<Geolocation bind:this={ref} />
+```
+
+### Slotted states
+
+This example shows programmatic usage of `geolocation.getCurrentPosition`.
 
 Using the default slot, you can destructure the following props:
 
@@ -82,10 +103,10 @@ Using the default slot, you can destructure the following props:
   let getPosition = false;
 </script>
 
-<button on:click="{() => (getPosition = true)}"> Get geolocation </button>
+<button on:click={() => (getPosition = true)}> Get geolocation </button>
 
 <Geolocation
-  getPosition="{getPosition}"
+  {getPosition}
   let:coords
   let:loading
   let:success
@@ -120,16 +141,16 @@ Set `watch` to `true` to invoke the `geolocation.watchPosition` method and get i
   let detail = {};
 </script>
 
-<button on:click="{() => (getPositionAgain = !getPositionAgain)}">
+<button on:click={() => (getPositionAgain = !getPositionAgain)}>
   Get Position
 </button>
 
 <Geolocation
-  getPosition="{getPositionAgain}"
-  watch="{true}"
-  on:position="{(e) => {
+  getPosition={getPositionAgain}
+  watch={true}
+  on:position={(e) => {
     detail = e.detail;
-  }}"
+  }}
 />
 
 <pre>{JSON.stringify(detail, null, 2)}</pre>
@@ -151,14 +172,14 @@ You can listen to dispatched events as an alternative to binding.
 
 <Geolocation
   getPosition
-  on:position="{(e) => {
+  on:position={(e) => {
     events = [...events, e.detail];
     console.log(e.detail); // GeolocationPosition
-  }}"
-  on:error="{(e) => {
+  }}
+  on:error={(e) => {
     events = [...events, e.detail];
     console.log(e.detail); // GeolocationError
-  }}"
+  }}
 />
 
 <strong>Dispatched events:</strong>
@@ -197,7 +218,7 @@ Specify [Geolocation position options](https://developer.mozilla.org/en-US/docs/
   };
 </script>
 
-<Geolocation getPosition options="{options}" />
+<Geolocation getPosition {options} />
 ```
 
 ## API
@@ -229,29 +250,23 @@ Use the `bind:this` directive to access the accessor methods available on the co
   $: geolocation?.getGeolocationPosition({ enableHighAccuracy: true });
 </script>
 
-<Geolocation bind:this="{geolocation}" />
+<Geolocation bind:this={geolocation} />
 ```
 
 #### API
 
 ```ts
 interface Accessors {
-  /** Watch the geolocation position */
-  watchPosition: (options: PositionOptions) => Promise<Number | undefined>;
+  /** Watch the geolocation position. */
+  watchPosition: (options: PositionOptions) => undefined | number;
 
-  /** Invoke the geolocation.getCurrentPosition method */
+  /** Programmatically get the geolocation position. */
   getGeolocationPosition: (options: PositionOptions) => Promise<void>;
 
-  /** Clear the Geolocation watcher */
-  clearWatcher: (watcherId: number) => Promise<void>;
+  /** Clear the Geolocation watcher. */
+  clearWatcher: (watcherId: number) => void;
 }
 ```
-
-## TypeScript
-
-Svelte version 3.31 or greater is required to use this module with TypeScript.
-
-TypeScript definitions are located in the [types folder](./types).
 
 ## Changelog
 

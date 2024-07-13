@@ -1,4 +1,3 @@
-/// <reference types="svelte" />
 import { SvelteComponentTyped } from "svelte";
 
 export type GeolocationError = false | GeolocationPositionError;
@@ -23,8 +22,8 @@ export interface GeolocationProps {
   options?: PositionOptions;
 
   /**
-   * Set to `true` to enable `geolocation` API.
-   * If `watch` is false, then `geolocation.getCurrentLocation` is used.
+   * Set to `true` to automatically trigger the `geolocation` API.
+   * If `watch` is false, then the `geolocation.getCurrentLocation` accessor must be called.
    * @default false
    */
   getPosition?: boolean;
@@ -63,7 +62,7 @@ export interface GeolocationProps {
 export default class extends SvelteComponentTyped<
   GeolocationProps,
   {
-    position: CustomEvent<GeolocationPosition>;
+    position: CustomEvent<GeolocationProps["position"]>;
     error: CustomEvent<GeolocationError>;
   },
   {
@@ -76,12 +75,12 @@ export default class extends SvelteComponentTyped<
     };
   }
 > {
-  /** Watch the geolocation position */
-  watchPosition: (options: PositionOptions) => Promise<Number | undefined>;
+  /** Watch the geolocation position. */
+  watchPosition: (options: PositionOptions) => undefined | number;
 
-  /** Invoke the `geolocation.getCurrentPosition` method */
+  /** Programmatically get the geolocation position. */
   getGeolocationPosition: (options: PositionOptions) => Promise<void>;
 
-  /** Clear the Geolocation watcher */
-  clearWatcher: (watcherId: number) => Promise<void>;
+  /** Clear the Geolocation watcher. */
+  clearWatcher: (watcherId: number) => void;
 }
