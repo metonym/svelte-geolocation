@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0](https://github.com/metonym/svelte-geolocation/releases/tag/v0.4.0) - 2024-07-13
+
+**Breaking Changes**
+
+- add exports map and use `type: module`
+- drop bundled ESM/UMD support
+
+**Fixes**
+
+- fix TypeScript definitions to reflect that `watchPosition`, `clearWatcher` accessors are not async
+
 ## [0.3.0](https://github.com/metonym/svelte-geolocation/releases/tag/v0.3.0) - 2021-10-27
 
 - use `.svelte.d.ts` extension for TypeScript definitions
