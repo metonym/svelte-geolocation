@@ -1,10 +1,9 @@
 <script lang="ts">
-  import Geolocation from "../types";
-  import {
+  import Geolocation from "svelte-geolocation";
+  import type {
     GeolocationProps,
     GeolocationCoords,
-  } from "../types/Geolocation.svelte";
-  import Geolocation2 from "../types/Geolocation.svelte";
+  } from "svelte-geolocation/Geolocation.svelte";
 
   let props: GeolocationProps = {
     watch: true,
@@ -24,13 +23,11 @@
   $: if (ref) ref.watchPosition({});
 </script>
 
-<!-- svelte-ignore missing-declaration -->
-<Geolocation getPosition="{getPosition}" bind:position />
+<Geolocation {getPosition} bind:position />
 
-<!-- svelte-ignore missing-declaration -->
 <Geolocation
   {...props}
-  getPosition="{getPosition}"
+  {getPosition}
   bind:coords
   let:loading
   let:success
@@ -48,26 +45,21 @@
 
 <button
   type="button"
-  on:click="{() => {
+  on:click={() => {
     getPosition = true;
-  }}">Get geolocation</button
+  }}>Get geolocation</button
 >
 
-<!-- svelte-ignore missing-declaration -->
 <Geolocation
-  bind:this="{ref}"
+  bind:this={ref}
   getPosition
-  watch="{false}"
-  on:position="{(e) => {
-    console.log(e.detail); // GeolocationPosition
-  }}"
-  on:error="{(e) => {
+  watch={false}
+  on:position={(e) => {
+    console.log(e.detail?.coords?.accuracy); // GeolocationPosition
+  }}
+  on:error={(e) => {
     console.log(e.detail); // GeolocationError
-  }}"
+  }}
 />
 
-<!-- svelte-ignore missing-declaration -->
-<Geolocation getPosition options="{options}" />
-
-<!-- svelte-ignore missing-declaration -->
-<Geolocation2 />
+<Geolocation getPosition {options} />
