@@ -10,9 +10,11 @@
     "dev": "bun --bun rollup -cw",
     "test": "bun --bun svelte-check --workspace tests",
     "package": "bun --run dlz",
-    "format": "bun --bun prettier --write . --cache"
+    "format": "bun --bun prettier --write . --cache",
+    "upgrade-examples": "bun scripts/upgrade-examples.ts"
   },
   "devDependencies": {
+    "@types/bun": "latest",
     "dlz": "latest",
     "prettier": "latest",
     "prettier-plugin-svelte": "latest",

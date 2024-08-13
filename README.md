@@ -4,8 +4,6 @@
 
 > Svelte bindings for the [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
 
-<!-- REPO_URL -->
-
 Declaratively access the Geolocation API in Svelte components. This package provides a simple way to fetch the geolocation coordinates of the device.
 
 **Features**
@@ -267,6 +265,13 @@ interface Accessors {
   clearWatcher: (watcherId: number) => void;
 }
 ```
+
+## Examples
+
+- [examples/sveltekit](examples/sveltekit)
+- [examples/vite](examples/vite)
+- [examples/rollup](examples/rollup)
+- [examples/webpack](examples/webpack)
 
 ## Changelog
 

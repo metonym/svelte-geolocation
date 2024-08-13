@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "latest",
+    "svelte": "latest",
+    "svelte-geolocation": "^1.0.0",
+    "vite": "latest"
+  }
+}

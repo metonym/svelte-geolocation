@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "rollup -cw",
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "latest",
+    "@rollup/plugin-node-resolve": "latest",
+    "rollup": "latest",
+    "rollup-plugin-svelte": "latest",
+    "rollup-plugin-terser": "latest",
+    "svelte": "latest",
+    "svelte-geolocation": "^1.0.0"
+  }
+}

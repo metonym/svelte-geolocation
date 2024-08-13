@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "webpack serve",
+    "build": "NODE_ENV=production webpack"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "latest",
+    "svelte": "latest",
+    "svelte-geolocation": "^1.0.0",
+    "svelte-loader": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "webpack-dev-server": "latest"
+  }
+}
