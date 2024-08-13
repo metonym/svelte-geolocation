@@ -33,6 +33,44 @@ bun i -D svelte-geolocation
 yarn add -D svelte-geolocation
 ```
 
+### Known Issues
+
+Some users have reported an error like the following when simply
+importing `svelte-geolocation`:
+
+```code
+2:39:10 PM [vite] Error when evaluating SSR module /src/routes/+page.svelte: failed to import "svelte-geolocation"
+|- TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".svelte" for /projects/my-project/node_modules/svelte-geolocation/Geolocation.svelte
+    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:160:9)
+    at defaultGetFormat (node:internal/modules/esm/get_format:203:36)
+    at defaultLoad (node:internal/modules/esm/load:143:22)
+    at async ModuleLoader.load (node:internal/modules/esm/loader:396:7)
+    at async ModuleLoader.moduleProvider (node:internal/modules/esm/loader:278:45)
+```
+
+To remedy this, one solution is to add `"svelte-geolocation"` to the
+`optimizeDeps.exclude` array of your `vite` config (e.g. `vite.config.js`). For example:
+
+```js
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  plugins: [sveltekit()],
+  test: {
+    include: ['src/**/*.{test,spec}.{js,ts}']
+  },
+  optimizeDeps: {
+    exclude: ['svelte-geolocation']
+  }
+});
+```
+
+See [here](https://vitejs.dev/config/dep-optimization-options.html#optimizedeps-exclude)
+for vitest's docs on `optimizeDeps.exclude`, and
+[here](https://vitejs.dev/guide/dep-pre-bundling.html) for more on the
+"why" of dependency optimization.
+
 ## Usage
 
 ### Binding coordinates
